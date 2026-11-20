@@ -456,7 +456,7 @@
     /* ================= SECTION 2: PROMISES & FLIP CARDS ================= */
     .promises-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 10px;
     }
 
@@ -488,7 +488,7 @@
     /* Flip Cards */
     .flip-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 10px;
     }
 
@@ -541,7 +541,7 @@
       box-shadow: 0 8px 20px rgba(126, 196, 244, 0.35);
     }
 
-    /* ================= SECTION 3: PHOTO GALLERY ================= */
+    /* ================= SECTION 3: FLIPPABLE PHOTO GALLERY ================= */
     .gallery-sub {
       text-align: center;
       font-size: 12px;
@@ -557,26 +557,47 @@
       gap: 12px;
     }
 
-    .photo-card {
-      background: var(--card-inner);
-      border: 1px solid rgba(168, 218, 251, 0.1);
-      border-radius: 16px;
-      overflow: hidden;
-      transition: transform 0.25s ease;
+    .photo-flip-card {
+      height: 170px;
+      perspective: 900px;
+      cursor: pointer;
     }
 
-    .photo-card:hover {
-      transform: translateY(-3px);
+    .photo-flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.65s cubic-bezier(0.4, 0.2, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+
+    .photo-flip-card.flipped .photo-flip-inner {
+      transform: rotateY(180deg);
+    }
+
+    .photo-card-front,
+    .photo-card-back {
+      position: absolute;
+      inset: 0;
+      background: var(--card-inner);
+      border: 1px solid rgba(168, 218, 251, 0.14);
+      border-radius: 16px;
+      overflow: hidden;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
     .photo-frame {
       width: 100%;
-      height: 125px;
+      flex: 1;
       position: relative;
       overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
+      background: linear-gradient(135deg, #254f75, #102336);
     }
 
     .photo-frame img {
@@ -587,12 +608,27 @@
     }
 
     .photo-caption {
-      padding: 9px 8px;
+      padding: 8px 6px;
       text-align: center;
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 700;
       color: var(--text-main);
-      background: rgba(9, 20, 32, 0.88);
+      background: rgba(9, 20, 32, 0.92);
+      flex-shrink: 0;
+    }
+
+    .photo-card-back {
+      background: linear-gradient(145deg, #8bcaf7, #4a95cc);
+      color: #081522;
+      transform: rotateY(180deg);
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.5;
+      box-shadow: 0 8px 20px rgba(126, 196, 244, 0.35);
     }
 
     /* ================= SECTION 4: LONG LETTER ================= */
@@ -749,237 +785,18 @@
     <!-- 2. Promises & Mini Flip Letters -->
     <section class="glass-card">
       <div class="section-divider-title">وعود من القلب</div>
-      <div class="promises-grid" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 24px;">
+      <div class="promises-grid" style="margin-bottom: 24px;">
         <div class="promise-item">
           <div class="promise-icon">🩵</div>
-          <div class="promise-text">هفضل جنبك في كل وقت</div>
+          <div class="promise-text">هفضل جنبك في كل وقت 🩵</div>
         </div>
         <div class="promise-item">
           <div class="promise-icon">🩵</div>
-          <div class="promise-text">هفضل سندك وأمانك دايماً</div>
+          <div class="promise-text">هفضل سندك وأمانك دايماً 🩵</div>
         </div>
-      </div>
-
-      <div class="section-divider-title">رسائل صغيرة</div>
-      <div class="flip-grid" style="grid-template-columns: repeat(2, 1fr);">
-        <div class="flip-card" onclick="this.classList.toggle('flipped')">
-          <div class="flip-inner">
-            <div class="flip-front">✉️</div>
-            <div class="flip-back">انتي اجمل حاجه في حياتي يا شموسه 🩵</div>
-          </div>
+        <div class="promise-item">
+          <div class="promise-icon">🩵</div>
+          <div class="promise-text">هفضل احبك دايما ومقدرش استغني عنك 🩵</div>
         </div>
-        <div class="flip-card" onclick="this.classList.toggle('flipped')">
-          <div class="flip-inner">
-            <div class="flip-front">⭐</div>
-            <div class="flip-back">وجودك بيخلي الدنيا منورة 🩵</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="scroll-hint">اسحبي لتحت ↓</div>
-
-    <!-- 3. Memories Photo Grid -->
-    <section class="glass-card">
-      <div class="section-divider-title">صور من الحكاية</div>
-      <p class="gallery-sub">كل صورة هنا جزء من الحكاية هادية وواضحة عشان الذكرى تبان أجمل</p>
-
-      <div class="photo-grid">
-        <!-- تقدر تستبدل الـ SVG بصورة حقيقية عن طريق وضع <img src="1.jpg" alt=""> -->
-        <div class="photo-card">
-          <div class="photo-frame" style="background: linear-gradient(135deg, #254f75, #102336);">
-            <svg width="70" height="70" viewBox="0 0 100 100" fill="none">
-              <circle cx="50" cy="36" r="18" fill="#a8dafb" opacity="0.85"/>
-              <path d="M22 82C22 65 78 65 78 82" fill="#7ec4f4" opacity="0.75"/>
-              <text x="50" y="92" text-anchor="middle" fill="#dff2ff" font-size="10" font-family="Cairo">M &amp; S</text>
-            </svg>
-          </div>
-          <div class="photo-caption">أحلى صدفة في عمري 🩵</div>
-        </div>
-
-        <div class="photo-card">
-          <div class="photo-frame" style="background: linear-gradient(135deg, #2d5c85, #12283d);">
-            <svg width="70" height="70" viewBox="0 0 100 100" fill="none">
-              <path d="M50 78C50 78 18 56 18 35C18 24 27 16 37 16C43 16 48 19 50 24C52 19 57 16 63 16C73 16 82 24 82 35C82 56 50 78 50 78Z" fill="#a8dafb" opacity="0.85"/>
-            </svg>
-          </div>
-          <div class="photo-caption">ضحكتك هي حياتي 🩵</div>
-        </div>
-
-        <div class="photo-card">
-          <div class="photo-frame" style="background: linear-gradient(135deg, #1f4466, #0d1d2e);">
-            <svg width="70" height="70" viewBox="0 0 100 100" fill="none">
-              <circle cx="66" cy="30" r="12" fill="#dff2ff" opacity="0.9"/>
-              <path d="M15 80Q38 50 55 72T90 62V88H15Z" fill="#6eb6e8" opacity="0.7"/>
-            </svg>
-          </div>
-          <div class="photo-caption">هفضل معاكي دايما 🩵</div>
-        </div>
-
-        <div class="photo-card">
-          <div class="photo-frame" style="background: linear-gradient(135deg, #1b3d5c, #0b1826);">
-            <svg width="70" height="70" viewBox="0 0 100 100" fill="none">
-              <polygon points="50,15 58,38 82,38 63,52 70,76 50,62 30,76 37,52 18,38 42,38" fill="#a8dafb" opacity="0.85"/>
-            </svg>
-          </div>
-          <div class="photo-caption">كل ما املك 🩵</div>
-        </div>
-      </div>
-    </section>
-
-    <div class="scroll-hint">اسحبي لتحت ↓</div>
-
-    <!-- 4. Final Long Love Letter -->
-    <section class="glass-card letter-card">
-      <div class="big-heart">🩵</div>
-      <h2 class="letter-title">شموستي.. 🩵</h2>
-      <p class="letter-body">
-        بحبك عموما وربنا يخليكي ليا ودايما هكون جمبك ومعاكي ومش هسيبك ابدا يا شموستي 🩵
-      </p>
-      <div class="letter-sign">Mazen &amp; Shams 🩵</div>
-
-      <button class="replay-btn" onclick="replayEnvelope()">
-        <span>💌</span>
-        <span>افتحي الجواب من الأول</span>
-      </button>
-    </section>
-
-  </main>
-
-  <script>
-    // ============================================================
-    // 1. تاريخ بداية قصتكم: 2 نوفمبر 2025 (الشهر في JS يبدأ من 0، فنوفمبر = 10)
-    // ============================================================
-    const START_DATE = new Date(2025, 10, 2, 0, 0, 0);
-
-    // إنشاء الجسيمات المتحركة في الخلفية
-    const particlesContainer = document.getElementById('particles');
-    for (let i = 0; i < 24; i++) {
-      const p = document.createElement('div');
-      p.className = 'particle';
-      const size = Math.random() * 14 + 6;
-      p.style.width = size + 'px';
-      p.style.height = size + 'px';
-      p.style.left = Math.random() * 100 + '%';
-      p.style.animationDuration = (Math.random() * 12 + 10) + 's';
-      p.style.animationDelay = (Math.random() * 10) + 's';
-      particlesContainer.appendChild(p);
-    }
-
-    // فتح الظرف والدخول للصفحة
-    function openEnvelope() {
-      const env = document.getElementById('envelope');
-      const screen = document.getElementById('envelope-screen');
-      const main = document.getElementById('main-content');
-
-      env.classList.add('open');
-      setTimeout(() => {
-        screen.classList.add('hidden');
-        main.classList.add('visible');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 950);
-    }
-
-    // إعادة تشغيل الجواب من الأول
-    function replayEnvelope() {
-      const env = document.getElementById('envelope');
-      const screen = document.getElementById('envelope-screen');
-      const main = document.getElementById('main-content');
-
-      main.classList.remove('visible');
-      env.classList.remove('open');
-      screen.classList.remove('hidden');
-      window.scrollTo({ top: 0, behavior: 'instant' });
-    }
-
-    // تحديث عداد الوقت الحي
-    function updateCounter() {
-      const now = new Date();
-      let years = now.getFullYear() - START_DATE.getFullYear();
-      let months = now.getMonth() - START_DATE.getMonth();
-      let days = now.getDate() - START_DATE.getDate();
-      let hours = now.getHours() - START_DATE.getHours();
-      let minutes = now.getMinutes() - START_DATE.getMinutes();
-      let seconds = now.getSeconds() - START_DATE.getSeconds();
-
-      if (seconds < 0) { seconds += 60; minutes--; }
-      if (minutes < 0) { minutes += 60; hours--; }
-      if (hours < 0) { hours += 24; days--; }
-      if (days < 0) {
-        const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
-        days += prevMonth.getDate();
-        months--;
-      }
-      if (months < 0) { months += 12; years--; }
-
-      document.getElementById('years').textContent = Math.max(0, years);
-      document.getElementById('months').textContent = Math.max(0, months);
-      document.getElementById('days').textContent = Math.max(0, days);
-      document.getElementById('hours').textContent = Math.max(0, hours);
-      document.getElementById('minutes').textContent = Math.max(0, minutes);
-      document.getElementById('seconds').textContent = Math.max(0, seconds);
-    }
-
-    setInterval(updateCounter, 1000);
-    updateCounter();
-
-    // مشغل الموسيقى
-    let isPlaying = false;
-    let audioCtx = null;
-    let melodyTimer = null;
-
-    function playSoftPianoNote(freq, duration) {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-      gain.gain.setValueAtTime(0.001, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + 0.08);
-      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + duration);
-    }
-
-    function startFallbackMelody() {
-      const notes = [329.63, 392.00, 493.88, 523.25, 493.88, 392.00, 349.23, 440.00, 523.25, 587.33, 523.25, 440.00];
-      let idx = 0;
-      playSoftPianoNote(notes[0], 1.4);
-      melodyTimer = setInterval(() => {
-        idx = (idx + 1) % notes.length;
-        playSoftPianoNote(notes[idx], 1.4);
-      }, 850);
-    }
-
-    function stopFallbackMelody() {
-      if (melodyTimer) {
-        clearInterval(melodyTimer);
-        melodyTimer = null;
-      }
-    }
-
-    function toggleMusic() {
-      const audio = document.getElementById('bgAudio');
-      const btn = document.getElementById('playBtn');
-
-      if (!isPlaying) {
-        const playPromise = audio.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(() => startFallbackMelody());
-        } else {
-          startFallbackMelody();
-        }
-        btn.textContent = '❚❚';
-        isPlaying = true;
-      } else {
-        audio.pause();
-        stopFallbackMelody();
-        btn.textContent = '▶';
-        isPlaying = false;
-      }
-    }
-  </script>
-</body>
-</html>
+        <div class="promise-item">
+          <div class="promi
