@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Mazen &amp; Shams 🩵 | حكايتنا</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0c1926;
+      --bg-mid: #162c42;
+      --card-bg: rgba(18, 37, 56, 0.76);
+      --card-inner: rgba(10, 22, 36, 0.68);
+      --border-soft: rgba(168, 218, 250, 0.22);
+      --sky: #7ec4f4;
+      --sky-bright: #a8dafb;
+      --sky-deep: #4b9bd4;
+      --text-main: #f4faff;
+      --text-muted: #b6d2e8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: radial-gradient(circle at 50% 18%, #1e3f5e 0%, #112438 55%, #09131e 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Floating Background Particles */
+    #particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(168, 218, 251, 0.55) 0%, rgba(126, 196, 244, 0) 70%);
+      animation: floatUp linear infinite;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(105vh) scale(0.7) rotate(0deg);
+        opacity: 0;
+      }
+      15% {
+        opacity: 0.75;
+      }
+      85% {
+        opacity: 0.6;
+      }
+      100% {
+        transform: translateY(-15vh) scale(1.15) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* ================= SPLASH / ENVELOPE SCREEN ================= */
+    #envelope-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: radial-gradient(circle at 50% 35%, #204466 0%, #102234 65%, #08111b 100%);
+      transition: opacity 0.8s ease, transform 0.8s ease, visibility 0.8s;
+    }
+
+    #envelope-screen.hidden {
+      opacity: 0;
+      transform: scale(1.06);
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .envelope-wrapper {
+      position: relative;
+      width: 270px;
+      height: 175px;
+      cursor: pointer;
+      perspective: 1000px;
+      margin-bottom: 34px;
+      filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.5));
+      transition: transform 0.35s ease;
+    }
+
+    .envelope-wrapper:hover {
+      transform: translateY(-4px) scale(1.02);
+    }
+
+    .envelope-back {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(145deg, #4b8fc4, #356c96);
+      border-radius: 16px;
+    }
+
+    .letter-preview {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 12px;
+      height: 135px;
+      background: linear-gradient(180deg, #ffffff 0%, #ebf6ff 100%);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 2;
+    }
+
+    .envelope-wrapper.open .letter-preview {
+      transform: translateY(-78px);
+    }
+
+    .letter-preview .names-mini {
+      font-family: 'Poppins', 'Cairo', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: #2b6794;
+      margin-bottom: 4px;
+    }
+
+    .letter-preview .sub-mini {
+      font-family: 'Poppins', sans-serif;
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      color: #5a9bc9;
+      font-weight: 600;
+    }
+
+    .envelope-front {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      border-radius: 16px;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .envelope-front::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #87c7f5 0%, #5ea5d9 50%, #4688ba 100%);
+      clip-path: polygon(0 0, 50% 56%, 100% 0, 100% 100%, 0 100%);
+    }
+
+    .envelope-front::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.16), rgba(0,0,0,0.16));
+      clip-path: polygon(0 100%, 50% 48%, 100% 100%);
+    }
+
+    .envelope-flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 105px;
+      background: linear-gradient(180deg, #a4d6fa 0%, #6cb2e6 100%);
+      clip-path: polygon(0 0, 100% 0, 50% 92%);
+      transform-origin: top center;
+      transition: transform 0.6s ease, z-index 0.3s;
+      z-index: 4;
+      border-top-left-radius: 16px;
+      border-top-right-radius: 16px;
+    }
+
+    .envelope-wrapper.open .envelope-flap {
+      transform: rotateX(180deg);
+      z-index: 1;
+    }
+
+    .wax-seal {
+      position: absolute;
+      top: 52%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 38px;
+      height: 38px;
+      background: #f4faff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      font-size: 16px;
+    }
+
+    .envelope-wrapper.open .wax-seal {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.5);
+    }
+
+    .splash-names {
+      font-family: 'Poppins', 'Cairo', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #ffffff;
+      text-shadow: 0 2px 16px rgba(168, 218, 251, 0.4);
+      margin-bottom: 18px;
+      direction: ltr;
+    }
+
+    .open-btn {
+      background: rgba(16, 35, 54, 0.88);
+      border: 1px solid rgba(168, 218, 251, 0.42);
+      color: #fff;
+      padding: 10px 24px;
+      border-radius: 999px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+      transition: all 0.25s ease;
+    }
+
+    .open-btn:hover {
+      background: var(--sky-deep);
+      border-color: var(--sky-bright);
+      transform: translateY(-2px);
+    }
+
+    .splash-hint {
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+      opacity: 0.85;
+    }
+
+    /* ================= MAIN CONTENT CONTAINER ================= */
+    #main-content {
+      position: relative;
+      z-index: 1;
+      max-width: 440px;
+      margin: 0 auto;
+      padding: 24px 16px 50px;
+      display: flex;
+      flex-direction: column;
+      gap: 26px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.9s ease 0.2s, transform 0.9s ease 0.2s;
+    }
+
+    #main-content.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--border-soft);
+      border-radius: 26px;
+      padding: 24px 18px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+    }
+
+    .section-divider-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 16px;
+    }
+
+    .section-divider-title::before,
+    .section-divider-title::after {
+      content: '';
+      height: 1px;
+      flex: 1;
+      background: linear-gradient(90deg, transparent, rgba(168, 218, 251, 0.4), transparent);
+    }
+
+    /* ================= SECTION 1: OUR STORY & COUNTER ================= */
+    .story-header {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .story-header h1 {
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .story-header p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .counter-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .time-box {
+      background: var(--card-inner);
+      border: 1px solid rgba(168, 218, 251, 0.08);
+      border-radius: 16px;
+      padding: 14px 8px;
+      text-align: center;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .time-box:hover {
+      border-color: rgba(168, 218, 251, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .time-box .num {
+      font-family: 'Poppins', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--sky-bright);
+      line-height: 1.2;
+    }
+
+    .time-box .label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Music Player Card */
+    .music-card {
+      padding: 16px 18px;
+      margin-top: -12px;
+    }
+
+    .music-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+
+    .music-top .tag {
+      color: var(--sky-bright);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .music-top .hint {
+      color: var(--text-muted);
+      font-size: 11px;
+    }
+
+    .player-bar {
+      background: var(--card-inner);
+      border: 1px solid rgba(168, 218, 251, 0.08);
+      border-radius: 18px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .song-info {
+      text-align: right;
+    }
+
+    .song-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .song-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .play-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(135deg, var(--sky-bright), var(--sky-deep));
+      color: #091724;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 18px rgba(126, 196, 244, 0.4);
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .play-btn:active {
+      transform: scale(0.92);
+    }
+
+    .scroll-hint {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      opacity: 0.75;
+      margin-top: -10px;
+    }
+
+    /* ================= SECTION 2: PROMISES & FLIP CARDS ================= */
+    .promises-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .promise-item {
+      background: var(--card-inner);
+      border: 1px solid rgba(168, 218, 251, 0.08);
+      border-radius: 16px;
+      padding: 14px 8px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .promise-icon {
+      font-size: 20px;
+      color: var(--sky-bright);
+    }
+
+    .promise-text {
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1.45;
+      color: var(--text-main);
+    }
+
+    /* Flip Cards */
+    .flip-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .flip-card {
+      height: 115px;
+      perspective: 800px;
+      cursor: pointer;
+    }
+
+    .flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.65s cubic-bezier(0.4, 0.2, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+
+    .flip-card.flipped .flip-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flip-front,
+    .flip-back {
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .flip-front {
+      background: var(--card-inner);
+      border: 1px solid rgba(168, 218, 251, 0.2);
+      font-size: 24px;
+      color: var(--sky-bright);
+    }
+
+    .flip-back {
+      background: linear-gradient(145deg, #8bcaf7, #4a95cc);
+      color: #081522;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.45;
+      transform: rotateY(180deg);
+      box-shadow: 0 8px 20px rgba(126, 196, 244, 0.35);
+    }
+
+    /* ================= SECTION 3: PHOTO GALLERY ================= */
+    .gallery-sub {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: -8px;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .photo-card {
+      background: var(--card-inner);
+      border: 1px solid rgba(168, 218, 251, 0.1);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform 0.25s ease;
+    }
+
+    .photo-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .photo-frame {
+      width: 100%;
+      height: 125px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .photo-caption {
+      padding: 9px 8px;
+      text-align: center;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text-main);
+      background: rgba(9, 20, 32, 0.88);
+    }
+
+    /* ================= SECTION 4: LONG LETTER ================= */
+    .letter-card {
+      text-align: center;
+      padding: 32px 22px;
+      background: linear-gradient(180deg, rgba(24, 51, 77, 0.85) 0%, rgba(12, 26, 40, 0.9) 100%);
+    }
+
+    .big-heart {
+      font-size: 32px;
+      display: inline-block;
+      margin-bottom: 10px;
+      animation: pulse 1.8s infinite ease-in-out;
+      filter: drop-shadow(0 0 12px rgba(168, 218, 251, 0.55));
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.14); }
+    }
+
+    .letter-title {
+      font-size: 21px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      color: #fff;
+    }
+
+    .letter-body {
+      font-size: 14px;
+      line-height: 1.95;
+      color: #e4f3ff;
+      margin-bottom: 22px;
+    }
+
+    .letter-sign {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--sky-bright);
+      margin-bottom: 24px;
+    }
+
+    .replay-btn {
+      background: linear-gradient(135deg, rgba(126, 196, 244, 0.28), rgba(75, 155, 212, 0.38));
+      border: 1px solid rgba(168, 218, 251, 0.45);
+      color: #fff;
+      padding: 11px 24px;
+      border-radius: 999px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+    }
+
+    .replay-btn:hover {
+      background: var(--sky-deep);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Particles -->
+  <div id="particles"></div>
+
+  <!-- Splash Screen with Interactive Envelope -->
+  <section id="envelope-screen">
+    <div class="envelope-wrapper" id="envelope" onclick="openEnvelope()">
+      <div class="envelope-back"></div>
+      <div class="letter-preview">
+        <div class="names-mini">Mazen &amp; Shams</div>
+        <div class="sub-mini">OUR ETERNAL LOVE STORY</div>
+      </div>
+      <div class="envelope-front"></div>
+      <div class="envelope-flap"></div>
+      <div class="wax-seal">🩵</div>
+    </div>
+
+    <div class="splash-names">Mazen &amp; Shams</div>
+
+    <button class="open-btn" onclick="openEnvelope()">
+      <span>💌</span>
+      <span>افتحي الجواب</span>
+    </button>
+
+    <div class="splash-hint">اضغطي على الظرف عشان تفتحي الحكاية</div>
+  </section>
+
+  <!-- Main Story Content -->
+  <main id="main-content">
+
+    <!-- 1. Our Story & Live Counter -->
+    <section class="glass-card">
+      <div class="story-header">
+        <h1>حكايتنا <span>🩵</span></h1>
+        <p>كل لحظة معاكي هي عمر جديد</p>
+      </div>
+
+      <div class="section-divider-title">منذ أن بدأت القصة</div>
+
+      <div class="counter-grid">
+        <div class="time-box">
+          <div class="num" id="years">0</div>
+          <div class="label">سنة</div>
+        </div>
+        <div class="time-box">
+          <div class="num" id="months">0</div>
+          <div class="label">شهر</div>
+        </div>
+        <div class="time-box">
+          <div class="num" id="days">0</div>
+          <div class="label">يوم</div>
+        </div>
+        <div class="time-box">
+          <div class="num" id="hours">0</div>
+          <div class="label">ساعة</div>
+        </div>
+        <div class="time-box">
+          <div class="num" id="minutes">0</div>
+          <div class="label">دقيقة</div>
+        </div>
+        <div class="time-box">
+          <div class="num" id="seconds">0</div>
+          <div class="label">ثانية</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Music Player -->
+    <section class="glass-card music-card">
+      <div class="music-top">
+        <span class="tag">🎵 موسيقى الذكرى</span>
+        <span class="hint">شغليها وانتِ بتقري</span>
+      </div>
+      <div class="player-bar">
+        <div class="song-info">
+          <div class="song-title">ع بالي حبيبي - إليسا</div>
+          <div class="song-sub">الأغنية اللي بتوصفنا 🎶</div>
+        </div>
+        <button class="play-btn" id="playBtn" onclick="toggleMusic()" aria-label="تشغيل الموسيقى">▶</button>
+      </div>
+      <audio id="bgAudio" loop preload="auto">
+        <source src="song.mp3" type="audio/mpeg">
+      </audio>
+    </section>
+
+    <div class="scroll-hint">اسحبي لتحت ↓</div>
+
+    <!-- 2. Promises & Mini Flip Letters -->
+    <section class="glass-card">
+      <div class="section-divider-title">وعود من القلب</div>
+      <div class="promises-grid" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 24px;">
+        <div class="promise-item">
+          <div class="promise-icon">🩵</div>
+          <div class="promise-text">هفضل جنبك في كل وقت</div>
+        </div>
+        <div class="promise-item">
+          <div class="promise-icon">🩵</div>
+          <div class="promise-text">هفضل سندك وأمانك دايماً</div>
+        </div>
+      </div>
+
+      <div class="section-divider-title">رسائل صغيرة</div>
+      <div class="flip-grid" style="grid-template-columns: repeat(2, 1fr);">
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+          <div class="flip-inner">
+            <div class="flip-front">✉️</div>
+            <div class="flip-back">انتي اجمل حاجه في حياتي يا شموسه 🩵</div>
+          </div>
+        </div>
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+          <div class="flip-inner">
+            <div class="flip-front">⭐</div>
+            <div class="flip-back">وجودك بيخلي الدنيا منورة 🩵</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="scroll-hint">اسحبي لتحت ↓</div>
+
+    <!-- 3. Memories Photo Grid -->
+    <section class="glass-card">
+      <div class="section-divider-title">صور من الحكاية</div>
+      <p class="gallery-sub">كل صورة هنا جزء من الحكاية هادية وواضحة عشان الذكرى تبان أجمل</p>
+
+      <div class="photo-grid">
+        <!-- تقدر تستبدل الـ SVG بصورة حقيقية عن طريق وضع <img src="1.jpg" alt=""> -->
+        <div class="photo-card">
+          <div class="photo-frame" style="background: linear-gradient(135deg, #254f75, #102336);">
+            <svg width="70" height="70" viewBox="0 0 100 100" fill="none">
+              <circle cx="50" cy="36" r="18" fill="#a8dafb" opacity="0.85"/>
+              <path d="M22 82C22 65 78 65 78 82" fill="#7ec4f4" opacity="0.75"/>
+              <text x="50" y="92" text-anchor="middle" fill="#dff2ff" font-size="10" font-family="Cairo">M &amp; S</text>
+            </svg>
+          </div>
+          <div class="photo-caption">أحلى صدفة في عمري 🩵</div>
+        </div>
+
+        <div class="photo-card">
+          <div class="photo-frame" style="background: linear-gradient(135deg, #2d5c85, #12283d);">
+            <svg width="70" height="70" viewBox="0 0 100 100" fill="none">
+              <path d="M50 78C50 78 18 56 18 35C18 24 27 16 37 16C43 16 48 19 50 24C52 19 57 16 63 16C73 16 82 24 82 35C82 56 50 78 50 78Z" fill="#a8dafb" opacity="0.85"/>
+            </svg>
+          </div>
+          <div class="photo-caption">ضحكتك هي حياتي 🩵</div>
+        </div>
+
+        <div class="photo-card">
+          <div class="photo-frame" style="background: linear-gradient(135deg, #1f4466, #0d1d2e);">
+            <svg width="70" height="70" viewBox="0 0 100 100" fill="none">
+              <circle cx="66" cy="30" r="12" fill="#dff2ff" opacity="0.9"/>
+              <path d="M15 80Q38 50 55 72T90 62V88H15Z" fill="#6eb6e8" opacity="0.7"/>
+            </svg>
+          </div>
+          <div class="photo-caption">هفضل معاكي دايما 🩵</div>
+        </div>
+
+        <div class="photo-card">
+          <div class="photo-frame" style="background: linear-gradient(135deg, #1b3d5c, #0b1826);">
+            <svg width="70" height="70" viewBox="0 0 100 100" fill="none">
+              <polygon points="50,15 58,38 82,38 63,52 70,76 50,62 30,76 37,52 18,38 42,38" fill="#a8dafb" opacity="0.85"/>
+            </svg>
+          </div>
+          <div class="photo-caption">كل ما املك 🩵</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="scroll-hint">اسحبي لتحت ↓</div>
+
+    <!-- 4. Final Long Love Letter -->
+    <section class="glass-card letter-card">
+      <div class="big-heart">🩵</div>
+      <h2 class="letter-title">شموستي.. 🩵</h2>
+      <p class="letter-body">
+        بحبك عموما وربنا يخليكي ليا ودايما هكون جمبك ومعاكي ومش هسيبك ابدا يا شموستي 🩵
+      </p>
+      <div class="letter-sign">Mazen &amp; Shams 🩵</div>
+
+      <button class="replay-btn" onclick="replayEnvelope()">
+        <span>💌</span>
+        <span>افتحي الجواب من الأول</span>
+      </button>
+    </section>
+
+  </main>
+
+  <script>
+    // ============================================================
+    // 1. تاريخ بداية قصتكم: 2 نوفمبر 2025 (الشهر في JS يبدأ من 0، فنوفمبر = 10)
+    // ============================================================
+    const START_DATE = new Date(2025, 10, 2, 0, 0, 0);
+
+    // إنشاء الجسيمات المتحركة في الخلفية
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 24; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const size = Math.random() * 14 + 6;
+      p.style.width = size + 'px';
+      p.style.height = size + 'px';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.animationDuration = (Math.random() * 12 + 10) + 's';
+      p.style.animationDelay = (Math.random() * 10) + 's';
+      particlesContainer.appendChild(p);
+    }
+
+    // فتح الظرف والدخول للصفحة
+    function openEnvelope() {
+      const env = document.getElementById('envelope');
+      const screen = document.getElementById('envelope-screen');
+      const main = document.getElementById('main-content');
+
+      env.classList.add('open');
+      setTimeout(() => {
+        screen.classList.add('hidden');
+        main.classList.add('visible');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 950);
+    }
+
+    // إعادة تشغيل الجواب من الأول
+    function replayEnvelope() {
+      const env = document.getElementById('envelope');
+      const screen = document.getElementById('envelope-screen');
+      const main = document.getElementById('main-content');
+
+      main.classList.remove('visible');
+      env.classList.remove('open');
+      screen.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+
+    // تحديث عداد الوقت الحي
+    function updateCounter() {
+      const now = new Date();
+      let years = now.getFullYear() - START_DATE.getFullYear();
+      let months = now.getMonth() - START_DATE.getMonth();
+      let days = now.getDate() - START_DATE.getDate();
+      let hours = now.getHours() - START_DATE.getHours();
+      let minutes = now.getMinutes() - START_DATE.getMinutes();
+      let seconds = now.getSeconds() - START_DATE.getSeconds();
+
+      if (seconds < 0) { seconds += 60; minutes--; }
+      if (minutes < 0) { minutes += 60; hours--; }
+      if (hours < 0) { hours += 24; days--; }
+      if (days < 0) {
+        const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+        days += prevMonth.getDate();
+        months--;
+      }
+      if (months < 0) { months += 12; years--; }
+
+      document.getElementById('years').textContent = Math.max(0, years);
+      document.getElementById('months').textContent = Math.max(0, months);
+      document.getElementById('days').textContent = Math.max(0, days);
+      document.getElementById('hours').textContent = Math.max(0, hours);
+      document.getElementById('minutes').textContent = Math.max(0, minutes);
+      document.getElementById('seconds').textContent = Math.max(0, seconds);
+    }
+
+    setInterval(updateCounter, 1000);
+    updateCounter();
+
+    // مشغل الموسيقى
+    let isPlaying = false;
+    let audioCtx = null;
+    let melodyTimer = null;
+
+    function playSoftPianoNote(freq, duration) {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    }
+
+    function startFallbackMelody() {
+      const notes = [329.63, 392.00, 493.88, 523.25, 493.88, 392.00, 349.23, 440.00, 523.25, 587.33, 523.25, 440.00];
+      let idx = 0;
+      playSoftPianoNote(notes[0], 1.4);
+      melodyTimer = setInterval(() => {
+        idx = (idx + 1) % notes.length;
+        playSoftPianoNote(notes[idx], 1.4);
+      }, 850);
+    }
+
+    function stopFallbackMelody() {
+      if (melodyTimer) {
+        clearInterval(melodyTimer);
+        melodyTimer = null;
+      }
+    }
+
+    function toggleMusic() {
+      const audio = document.getElementById('bgAudio');
+      const btn = document.getElementById('playBtn');
+
+      if (!isPlaying) {
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(() => startFallbackMelody());
+        } else {
+          startFallbackMelody();
+        }
+        btn.textContent = '❚❚';
+        isPlaying = true;
+      } else {
+        audio.pause();
+        stopFallbackMelody();
+        btn.textContent = '▶';
+        isPlaying = false;
+      }
+    }
+  </script>
+</body>
+</html>
